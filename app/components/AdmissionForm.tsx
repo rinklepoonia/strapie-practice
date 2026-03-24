@@ -8,59 +8,63 @@ export default function AdmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasOtherGuardian, setHasOtherGuardian] = useState(false);
 
-const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const form = e.currentTarget;
-  const formData = new FormData(form);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-  // Convert FormData to object
-  const data: any = {
-    guardian: {
-      other: {}
-    },
-    address: {}
-  };
-  
-  const guardianFields = [
-    "fatherName", "motherName", "fatherQualification", "MotherQualification",
-    "fatherImage", "motherImage"
-  ];
+    // Convert FormData to object
+    const data: any = {
+      guardian: {
+        other: {}
+      },
+      address: {}
+    };
 
-  const otherFields = [
-    "fullName", "relation", "image"
-  ];
+    const guardianFields = [
+      "fatherName", "motherName", "fatherQualification", "MotherQualification",
+      "fatherImage", "motherImage"
+    ];
 
-  const addressFields = [
-    "village", "district", "state", "PinCode"
-  ];
+    const otherFields = [
+      "fullName", "relation", "otherImage"
+    ];
 
-  formData.forEach((value, key) => {
-    if (guardianFields.includes(key)) {
-      data.guardian[key] = value;
-    } else if (otherFields.includes(key)) {
-      data.guardian.other[key] = value;
-    } else if (addressFields.includes(key)) {
-      data.address[key] = value;
-    } else {
-      data[key] = value;
+    const addressFields = [
+      "village", "district", "state", "PinCode"
+    ];
+
+    // const ignoreFields = ["primaryGuardian"];
+
+    formData.forEach((value, key) => {
+      // if (ignoreFields.includes(key)) return;
+
+      if (guardianFields.includes(key)) {
+        data.guardian[key] = value;
+      } else if (otherFields.includes(key)) {
+        data.guardian.other[key] = value;
+      } else if (addressFields.includes(key)) {
+        data.address[key] = value;
+      } else {
+        data[key] = value;
+      }
+    });
+    try {
+      await addAdmission({ data: { ...data } })
+    } catch (error) {
+
     }
-  });
-     try {
-      await addAdmission({data:{...data}})
-     } catch (error) {
-      
-     }
-  console.log("Form Data:", data);
+    console.log("Form Data:", data);
 
-  // Simulate submission delay
-  setTimeout(() => {
-    alert("Admission form submitted successfully!");
-    // form.reset();
-    setIsSubmitting(false);
-  }, 1000);
-};
+    // Simulate submission delay
+    setTimeout(() => {
+      alert("Admission form submitted successfully!");
+      // form.reset();
+      setIsSubmitting(false);
+    }, 1000);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
@@ -84,17 +88,17 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
             <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
               <Input required type="text" label="First Name" name="firstName" placeholder="John" />
-              <Input  type="text" label="Last Name" name="lastName" placeholder="Doe" />
-              <Input required type="text" label="Class" name="class" placeholder="e.g. 10th Grade" />
+              <Input type="text" label="Last Name" name="lastName" placeholder="Doe" />
+              {/* <Input required type="text" label="Class" name="class" placeholder="e.g. 10th Grade" /> */}
               <Input required type="date" label="Date of Birth" name="dob" />
 
               <div>
                 <label htmlFor="gender" className="block text-sm font-semibold text-gray-700">Gender</label>
                 <select required id="gender" name="gender" className="mt-2 block w-full rounded-lg border-gray-300 border p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out hover:border-blue-300 bg-white">
                   <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="OTHER">Other</option>
                 </select>
               </div>
 
@@ -124,22 +128,18 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
                 <label className="block text-sm font-semibold text-gray-700 mb-3">Who is the primary guardian?</label>
                 <div className="flex space-x-6">
                   <label className="flex items-center space-x-2 cursor-pointer">
-                    <input 
-                      type="radio" 
-                      name="guardian" 
-                      value="parents" 
-                      checked={!hasOtherGuardian} 
+                    <input
+                      type="radio"
+                      checked={!hasOtherGuardian}
                       onChange={() => setHasOtherGuardian(false)}
                       className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                     />
                     <span className="text-gray-700 font-medium">Father / Mother</span>
                   </label>
                   <label className="flex items-center space-x-2 cursor-pointer">
-                    <input 
-                      type="radio" 
-                      name="other" 
-                      value="other" 
-                      checked={hasOtherGuardian} 
+                    <input
+                      type="radio"
+                      checked={hasOtherGuardian}
                       onChange={() => setHasOtherGuardian(true)}
                       className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                     />
@@ -152,10 +152,10 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
                 <>
                   <Input required type="text" label="Father's Name" name="fatherName" placeholder="Father's Full Name" />
                   <Input required type="text" label="Mother's Name" name="motherName" placeholder="Mother's Full Name" />
-                  
+
                   <Input type="text" label="Father's Qualification" name="fatherQualification" placeholder="Highest Degree/Education" />
-                  <Input type="text" label="Mother's Qualification" name="motherQualification" placeholder="Highest Degree/Education" />
-                  
+                  <Input type="text" label="Mother's Qualification" name="MotherQualification" placeholder="Highest Degree/Education" />
+
                   <Input type="file" label="Father's Photo" name="fatherImage" accept="image/*" />
                   <Input type="file" label="Mother's Photo" name="motherImage" accept="image/*" />
                 </>
@@ -163,7 +163,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
                 <div className="sm:col-span-2 pt-4 mt-2 border-t border-gray-100">
                   <h4 className="text-md font-semibold text-gray-700 mb-4">Other Contact Information</h4>
                   <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-                    <Input required type="text" label="Full Name" name="otherFullName" placeholder="Guardian's Name" />
+                    <Input required type="text" label="Full Name" name="fullName" placeholder="Guardian's Name" />
                     <Input required type="text" label="Relation" name="relation" placeholder="e.g. Uncle, Aunt, Grandparent" />
                     <Input type="file" label="Contact Person Photo" name="otherImage" accept="image/*" className="sm:col-span-2 sm:w-1/2" />
                   </div>
@@ -182,7 +182,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
               <Input required type="text" label="Village" name="village" placeholder="Village or Street Name" />
               <Input required type="text" label="District" name="district" placeholder="District" />
               <Input required type="text" label="State" name="state" placeholder="State" />
-              <Input required type="text" label="Pin Code" name="pinCode" placeholder="Postal / Pin Code" />
+              <Input required type="text" label="Pin Code" name="PinCode" placeholder="Postal / Pin Code" />
             </div>
           </section>
 
