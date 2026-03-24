@@ -2,11 +2,13 @@
 
 import React, { useState } from "react";
 import { Input } from "./common/Input";
+import { addAdmission } from "../utils/api/apiList";
 
 export default function AdmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasOtherGuardian, setHasOtherGuardian] = useState(false);
 
-const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setIsSubmitting(true);
 
@@ -14,17 +16,48 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   const formData = new FormData(form);
 
   // Convert FormData to object
-  const data: any = {};
-  formData.forEach((value, key) => {
-    data[key] = value;
-  });
+  const data: any = {
+    guardian: {
+      other: {}
+    },
+    address: {}
+  };
+  
+  const guardianFields = [
+    "fatherName", "motherName", "fatherQualification", "MotherQualification",
+    "fatherImage", "motherImage"
+  ];
 
+  const otherFields = [
+    "fullName", "relation", "image"
+  ];
+
+  const addressFields = [
+    "village", "district", "state", "PinCode"
+  ];
+
+  formData.forEach((value, key) => {
+    if (guardianFields.includes(key)) {
+      data.guardian[key] = value;
+    } else if (otherFields.includes(key)) {
+      data.guardian.other[key] = value;
+    } else if (addressFields.includes(key)) {
+      data.address[key] = value;
+    } else {
+      data[key] = value;
+    }
+  });
+     try {
+      await addAdmission({data:{...data}})
+     } catch (error) {
+      
+     }
   console.log("Form Data:", data);
 
   // Simulate submission delay
   setTimeout(() => {
     alert("Admission form submitted successfully!");
-    form.reset();
+    // form.reset();
     setIsSubmitting(false);
   }, 1000);
 };
@@ -51,7 +84,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
             <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
               <Input required type="text" label="First Name" name="firstName" placeholder="John" />
-              <Input required type="text" label="Last Name" name="lastName" placeholder="Doe" />
+              <Input  type="text" label="Last Name" name="lastName" placeholder="Doe" />
               <Input required type="text" label="Class" name="class" placeholder="e.g. 10th Grade" />
               <Input required type="date" label="Date of Birth" name="dob" />
 
@@ -79,33 +112,77 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
             </div>
           </section>
 
-          {/* Section 2: Guardian Information (Combined with Other Options) */}
+          {/* Section 2: Guardian Information */}
           <section>
             <div className="border-b border-gray-200 pb-4 mb-6">
               <h3 className="text-xl font-bold leading-6 text-gray-900">Guardian Details</h3>
-              <p className="mt-1 text-sm text-gray-500">Provide details about the student&apos;s parents or primary guardians, including other contacts if applicable.</p>
+              <p className="mt-1 text-sm text-gray-500">Provide details about the student&apos;s parents or primary guardians.</p>
             </div>
 
             <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-              {/* Primary Guardians */}
-              <Input required type="text" label="Father's Name" name="fatherName" placeholder="Father's Full Name" />
-              <Input required type="text" label="Mother's Name" name="motherName" placeholder="Mother's Full Name" />
-              
-              <Input type="text" label="Father's Qualification" name="fatherQualification" placeholder="Highest Degree/Education" />
-              <Input type="text" label="Mother's Qualification" name="motherQualification" placeholder="Highest Degree/Education" />
-              
-              <Input type="file" label="Father's Photo" name="fatherImage" accept="image/*" />
-              <Input type="file" label="Mother's Photo" name="motherImage" accept="image/*" />
-
-              {/* Other Contact inside Guardian Section */}
-              <div className="sm:col-span-2 pt-4 mt-2 border-t border-gray-100">
-                <h4 className="text-md font-semibold text-gray-700 mb-4">Other Contact Information (Optional)</h4>
-                <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-                  <Input type="text" label="Full Name" name="otherFullName" placeholder="Optional Contact Name" />
-                  <Input type="text" label="Relation" name="relation" placeholder="e.g. Uncle, Aunt, Guardian" />
-                  <Input type="file" label="Contact Person Photo" name="otherImage" accept="image/*" className="sm:col-span-2 sm:w-1/2" />
+              <div className="sm:col-span-2 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Who is the primary guardian?</label>
+                <div className="flex space-x-6">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="guardian" 
+                      value="parents" 
+                      checked={!hasOtherGuardian} 
+                      onChange={() => setHasOtherGuardian(false)}
+                      className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    />
+                    <span className="text-gray-700 font-medium">Father / Mother</span>
+                  </label>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="other" 
+                      value="other" 
+                      checked={hasOtherGuardian} 
+                      onChange={() => setHasOtherGuardian(true)}
+                      className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    />
+                    <span className="text-gray-700 font-medium">Other Guardian</span>
+                  </label>
                 </div>
               </div>
+
+              {!hasOtherGuardian ? (
+                <>
+                  <Input required type="text" label="Father's Name" name="fatherName" placeholder="Father's Full Name" />
+                  <Input required type="text" label="Mother's Name" name="motherName" placeholder="Mother's Full Name" />
+                  
+                  <Input type="text" label="Father's Qualification" name="fatherQualification" placeholder="Highest Degree/Education" />
+                  <Input type="text" label="Mother's Qualification" name="motherQualification" placeholder="Highest Degree/Education" />
+                  
+                  <Input type="file" label="Father's Photo" name="fatherImage" accept="image/*" />
+                  <Input type="file" label="Mother's Photo" name="motherImage" accept="image/*" />
+                </>
+              ) : (
+                <div className="sm:col-span-2 pt-4 mt-2 border-t border-gray-100">
+                  <h4 className="text-md font-semibold text-gray-700 mb-4">Other Contact Information</h4>
+                  <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
+                    <Input required type="text" label="Full Name" name="otherFullName" placeholder="Guardian's Name" />
+                    <Input required type="text" label="Relation" name="relation" placeholder="e.g. Uncle, Aunt, Grandparent" />
+                    <Input type="file" label="Contact Person Photo" name="otherImage" accept="image/*" className="sm:col-span-2 sm:w-1/2" />
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Section 3: Address Information */}
+          <section>
+            <div className="border-b border-gray-200 pb-4 mb-6">
+              <h3 className="text-xl font-bold leading-6 text-gray-900">Address Details</h3>
+              <p className="mt-1 text-sm text-gray-500">Student&apos;s residential address.</p>
+            </div>
+            <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
+              <Input required type="text" label="Village" name="village" placeholder="Village or Street Name" />
+              <Input required type="text" label="District" name="district" placeholder="District" />
+              <Input required type="text" label="State" name="state" placeholder="State" />
+              <Input required type="text" label="Pin Code" name="pinCode" placeholder="Postal / Pin Code" />
             </div>
           </section>
 
