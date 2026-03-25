@@ -8,9 +8,10 @@ export const addAdmission = async(data:any) =>(
         data
     })
 )
-export const getAdmission = async() =>(
+export const getAdmission = async(docId: string | number) =>(
     await handleApiRequest({ 
         method:GET_METHOD,
-        url:API_URLS.ADMISSION,  
+        url:API_URLS.ADMISSION +(docId?`/${docId}`:''),  
     })
 )
+
