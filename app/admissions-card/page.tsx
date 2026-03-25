@@ -1,13 +1,13 @@
-import React from "react";
+
 import { getAdmission } from "../utils/api/apiList";
-import AdmissionForm from "../components/AdmissionForm";
+import AdmissionCard from "../components/admission-card/AdmissionCard";
 
 const page = async () => {
   const admission = await getAdmission();
   console.log(admission.data, "dxfcvbhjkmjhbgfdfgbhnmk")
   return (
     <div>
-      
+      <AdmissionCard data={admission.data} />
     </div>
   );
 };

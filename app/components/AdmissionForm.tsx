@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Input } from "./common/Input";
 import { addAdmission } from "../utils/api/apiList";
+import Link from "next/link";
 
 export default function AdmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -351,7 +352,12 @@ export default function AdmissionForm() {
             </button>
           </div>
         </form>
+
+    
       </div>
+      <Link href="/admissions-card">
+          <button  className="bg-green-500 text-white py-3 px-5 rounded-lg cursor-pointer hover:opacity-85">check admiision card</button>
+          </Link>
     </div>
   );
 }

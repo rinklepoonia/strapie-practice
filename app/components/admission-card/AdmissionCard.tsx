@@ -34,6 +34,7 @@ const AdmissionCard: React.FC<AdmissionCardProps> = ({ data }) => {
   const handlePrint = () => {
     window.print();
   };
+  console.log("DATA:", data);
 
   return (
     <div className="max-w-3xl mx-auto my-8 bg-white border border-gray-300 shadow-lg rounded-xl overflow-hidden print:shadow-none print:border-none print:my-0 pb-8">
@@ -45,7 +46,7 @@ const AdmissionCard: React.FC<AdmissionCardProps> = ({ data }) => {
         </div>
         <button 
           onClick={handlePrint}
-          className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-100 transition print:hidden shadow-sm"
+          className= "cursor-pointer bg-white text-blue-600 px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-100 transition print:hidden shadow-sm"
         >
           Print Record
         </button>
