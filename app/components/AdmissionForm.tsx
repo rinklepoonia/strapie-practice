@@ -14,27 +14,27 @@ export default function AdmissionForm() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
     // Convert FormData to object
     const data: any = {
       guardian: {
-        other: {}
+        other: {},
       },
-      address: {}
+      address: {},
     };
 
     const guardianFields = [
-      "fatherName", "motherName", "fatherQualification", "MotherQualification",
-      "fatherImage", "motherImage"
+      "fatherName",
+      "motherName",
+      "fatherQualification",
+      "MotherQualification",
+      "fatherImage",
+      "motherImage",
     ];
 
-    const otherFields = [
-      "fullName", "relation", "otherImage"
-    ];
+    const otherFields = ["fullName", "relation", "otherImage"];
 
-    const addressFields = [
-      "village", "district", "state", "PinCode"
-    ];
+    const addressFields = ["village", "district", "state", "PinCode"];
 
     // const ignoreFields = ["primaryGuardian"];
 
@@ -51,21 +51,16 @@ export default function AdmissionForm() {
         data[key] = value;
       }
     });
+    // here api code
     try {
-      await addAdmission({ data: { ...data } })
+      await addAdmission({ data: { ...data } });
     } catch (error) {
-
+    } finally {
+      form.reset()
+      setIsSubmitting(false);
     }
     console.log("Form Data:", data);
-
-    // Simulate submission delay
-    setTimeout(() => {
-      alert("Admission form submitted successfully!");
-      // form.reset();
-      setIsSubmitting(false);
-    }, 1000);
   };
-
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
@@ -74,7 +69,8 @@ export default function AdmissionForm() {
             Student Admission Form
           </h2>
           <p className="mt-2 text-blue-100 text-sm">
-            Please fill in the details below carefully to complete the registration.
+            Please fill in the details below carefully to complete the
+            registration.
           </p>
         </div>
 
@@ -82,19 +78,44 @@ export default function AdmissionForm() {
           {/* Section 1: Student Information */}
           <section>
             <div className="border-b border-gray-200 pb-4 mb-6">
-              <h3 className="text-xl font-bold leading-6 text-gray-900">Student Details</h3>
-              <p className="mt-1 text-sm text-gray-500">Essential information about the student.</p>
+              <h3 className="text-xl font-bold leading-6 text-gray-900">
+                Student Details
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Essential information about the student.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-              <Input required type="text" label="First Name" name="firstName" placeholder="John" />
-              <Input type="text" label="Last Name" name="lastName" placeholder="Doe" />
+              <Input
+                required
+                type="text"
+                label="First Name"
+                name="firstName"
+                placeholder="John"
+              />
+              <Input
+                type="text"
+                label="Last Name"
+                name="lastName"
+                placeholder="Doe"
+              />
               {/* <Input required type="text" label="Class" name="class" placeholder="e.g. 10th Grade" /> */}
               <Input required type="date" label="Date of Birth" name="dob" />
 
               <div>
-                <label htmlFor="gender" className="block text-sm font-semibold text-gray-700">Gender</label>
-                <select required id="gender" name="gender" className="mt-2 block w-full rounded-lg border-gray-300 border p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out hover:border-blue-300 bg-white">
+                <label
+                  htmlFor="gender"
+                  className="block text-sm font-semibold text-gray-700"
+                >
+                  Gender
+                </label>
+                <select
+                  required
+                  id="gender"
+                  name="gender"
+                  className="mt-2 block w-full rounded-lg border-gray-300 border p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out hover:border-blue-300 bg-white"
+                >
                   <option value="">Select Gender</option>
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
@@ -103,14 +124,30 @@ export default function AdmissionForm() {
               </div>
 
               <div>
-                <label htmlFor="studentImage" className="block text-sm font-semibold text-gray-700">Student Photo</label>
+                <label
+                  htmlFor="studentImage"
+                  className="block text-sm font-semibold text-gray-700"
+                >
+                  Student Photo
+                </label>
                 <div className="mt-2 flex items-center">
                   <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100 border border-gray-300 flex-shrink-0">
-                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="h-full w-full text-gray-300"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   </span>
-                  <input required type="file" name="studentImage" id="studentImage" accept="image/*" className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-lg shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out w-full" />
+                  <input
+                    required
+                    type="file"
+                    name="studentImage"
+                    id="studentImage"
+                    accept="image/*"
+                    className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-lg shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out w-full"
+                  />
                 </div>
               </div>
             </div>
@@ -119,13 +156,20 @@ export default function AdmissionForm() {
           {/* Section 2: Guardian Information */}
           <section>
             <div className="border-b border-gray-200 pb-4 mb-6">
-              <h3 className="text-xl font-bold leading-6 text-gray-900">Guardian Details</h3>
-              <p className="mt-1 text-sm text-gray-500">Provide details about the student&apos;s parents or primary guardians.</p>
+              <h3 className="text-xl font-bold leading-6 text-gray-900">
+                Guardian Details
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Provide details about the student&apos;s parents or primary
+                guardians.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
               <div className="sm:col-span-2 mb-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">Who is the primary guardian?</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Who is the primary guardian?
+                </label>
                 <div className="flex space-x-6">
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
@@ -134,7 +178,9 @@ export default function AdmissionForm() {
                       onChange={() => setHasOtherGuardian(false)}
                       className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                     />
-                    <span className="text-gray-700 font-medium">Father / Mother</span>
+                    <span className="text-gray-700 font-medium">
+                      Father / Mother
+                    </span>
                   </label>
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
@@ -143,29 +189,83 @@ export default function AdmissionForm() {
                       onChange={() => setHasOtherGuardian(true)}
                       className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                     />
-                    <span className="text-gray-700 font-medium">Other Guardian</span>
+                    <span className="text-gray-700 font-medium">
+                      Other Guardian
+                    </span>
                   </label>
                 </div>
               </div>
 
               {!hasOtherGuardian ? (
                 <>
-                  <Input required type="text" label="Father's Name" name="fatherName" placeholder="Father's Full Name" />
-                  <Input required type="text" label="Mother's Name" name="motherName" placeholder="Mother's Full Name" />
+                  <Input
+                    required
+                    type="text"
+                    label="Father's Name"
+                    name="fatherName"
+                    placeholder="Father's Full Name"
+                  />
+                  <Input
+                    required
+                    type="text"
+                    label="Mother's Name"
+                    name="motherName"
+                    placeholder="Mother's Full Name"
+                  />
 
-                  <Input type="text" label="Father's Qualification" name="fatherQualification" placeholder="Highest Degree/Education" />
-                  <Input type="text" label="Mother's Qualification" name="MotherQualification" placeholder="Highest Degree/Education" />
+                  <Input
+                    type="text"
+                    label="Father's Qualification"
+                    name="fatherQualification"
+                    placeholder="Highest Degree/Education"
+                  />
+                  <Input
+                    type="text"
+                    label="Mother's Qualification"
+                    name="MotherQualification"
+                    placeholder="Highest Degree/Education"
+                  />
 
-                  <Input type="file" label="Father's Photo" name="fatherImage" accept="image/*" />
-                  <Input type="file" label="Mother's Photo" name="motherImage" accept="image/*" />
+                  <Input
+                    type="file"
+                    label="Father's Photo"
+                    name="fatherImage"
+                    accept="image/*"
+                  />
+                  <Input
+                    type="file"
+                    label="Mother's Photo"
+                    name="motherImage"
+                    accept="image/*"
+                  />
                 </>
               ) : (
                 <div className="sm:col-span-2 pt-4 mt-2 border-t border-gray-100">
-                  <h4 className="text-md font-semibold text-gray-700 mb-4">Other Contact Information</h4>
+                  <h4 className="text-md font-semibold text-gray-700 mb-4">
+                    Other Contact Information
+                  </h4>
                   <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-                    <Input required type="text" label="Full Name" name="fullName" placeholder="Guardian's Name" />
-                    <Input required type="text" label="Relation" name="relation" placeholder="e.g. Uncle, Aunt, Grandparent" />
-                    <Input type="file" label="Contact Person Photo" name="otherImage" accept="image/*" className="sm:col-span-2 sm:w-1/2" />
+                    <Input
+                      required
+                      type="text"
+                      label="Full Name"
+                      name="fullName"
+                      placeholder="Guardian's Name"
+                    />
+                    <Input
+                      required
+                      type="text"
+                      label="Relation"
+                      name="relation"
+                      placeholder="e.g. Uncle, Aunt, Grandparent"
+                    />
+                    <Input
+                      type="file"
+                      label="Contact Person Photo"
+                      name="otherImage"
+                      accept="image/*"
+                      className="sm:col-span-2 sm:w-1/2"
+                    />
                   </div>
                 </div>
               )}
@@ -175,14 +275,42 @@ export default function AdmissionForm() {
           {/* Section 3: Address Information */}
           <section>
             <div className="border-b border-gray-200 pb-4 mb-6">
-              <h3 className="text-xl font-bold leading-6 text-gray-900">Address Details</h3>
-              <p className="mt-1 text-sm text-gray-500">Student&apos;s residential address.</p>
+              <h3 className="text-xl font-bold leading-6 text-gray-900">
+                Address Details
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Student&apos;s residential address.
+              </p>
             </div>
             <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-              <Input required type="text" label="Village" name="village" placeholder="Village or Street Name" />
-              <Input required type="text" label="District" name="district" placeholder="District" />
-              <Input required type="text" label="State" name="state" placeholder="State" />
-              <Input required type="text" label="Pin Code" name="PinCode" placeholder="Postal / Pin Code" />
+              <Input
+                required
+                type="text"
+                label="Village"
+                name="village"
+                placeholder="Village or Street Name"
+              />
+              <Input
+                required
+                type="text"
+                label="District"
+                name="district"
+                placeholder="District"
+              />
+              <Input
+                required
+                type="text"
+                label="State"
+                name="state"
+                placeholder="State"
+              />
+              <Input
+                required
+                type="text"
+                label="Pin Code"
+                name="PinCode"
+                placeholder="Postal / Pin Code"
+              />
             </div>
           </section>
 
@@ -195,9 +323,25 @@ export default function AdmissionForm() {
             >
               {isSubmitting ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Submitting Form...
                 </>
