@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Input } from "./common/Input";
 import { addAdmission } from "../utils/api/apiList";
 import Link from "next/link";
+import Button from "./common/Button";
 
 export default function AdmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -351,6 +352,7 @@ export default function AdmissionForm() {
               )}
             </button>
           </div>
+
         </form>
 
     
