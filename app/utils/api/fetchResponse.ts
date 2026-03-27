@@ -47,7 +47,7 @@ export async function handleApiRequest({
     // }
 
     const SERVER_URL = `${CMS_HOST_URL}/api`;
-
+ console.log(`${SERVER_URL}${url}`,"`${SERVER_URL}${url}`")
     const headers: HeadersInit = {};
 
     if (auth) {

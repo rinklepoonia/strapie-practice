@@ -11,7 +11,7 @@ export const addAdmission = async(data:any) =>(
 export const getAdmission = async(docId ?: string | number) =>(
     await handleApiRequest({ 
         method:GET_METHOD,
-        url:API_URLS.ADMISSION +(docId?`/${docId}`:''),  
+        url:API_URLS.ADMISSION +(docId?`${docId}`:''),  
     })
 )
 
